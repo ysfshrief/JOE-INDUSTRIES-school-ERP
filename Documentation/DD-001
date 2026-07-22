@@ -1,0 +1,581 @@
+# DD-001
+
+# Data Dictionary
+# قاموس البيانات
+
+**Project:** JOE INDUSTRIES School ERP
+
+**Version:** 1.0
+
+---
+
+# 1. الهدف
+
+تعتبر هذه الوثيقة المرجع الرسمي لجميع جداول قاعدة البيانات داخل نظام **JOE INDUSTRIES School ERP**.
+
+تحدد الوثيقة:
+
+- جميع الجداول.
+- الغرض من كل جدول.
+- العلاقات.
+- المفاتيح الأساسية.
+- المفاتيح الخارجية.
+- قواعد الحذف.
+- قواعد التحديث.
+
+ولا يجوز إنشاء أي جدول خارج هذه الوثيقة إلا بعد إضافته إليها.
+
+---
+
+# 2. قواعد عامة
+
+جميع الجداول يجب أن تحتوي على الحقول التالية:
+
+| الحقل | النوع |
+|---------|---------|
+| id | UUID |
+| created_at | DATETIME |
+| created_by | UUID |
+| updated_at | DATETIME |
+| updated_by | UUID |
+| archived_at | DATETIME Nullable |
+| archived_by | UUID Nullable |
+| deleted_at | DATETIME Nullable |
+| deleted_by | UUID Nullable |
+| is_archived | BOOLEAN |
+| is_deleted | BOOLEAN |
+
+---
+
+# 3. جدول المدارس
+
+## schools
+
+الغرض:
+
+تخزين بيانات المدرسة المالكة للنظام.
+
+### الحقول
+
+- id
+- school_name
+- school_name_en
+- address
+- city
+- governorate
+- country
+- phone
+- mobile
+- email
+- website
+- logo
+- principal_name
+- tax_number
+- commercial_register
+- license_key
+- current_academic_year
+- timezone
+- currency
+- language
+
+---
+
+# 4. جدول السنوات الدراسية
+
+academic_years
+
+الحقول
+
+- id
+- name
+- start_date
+- end_date
+- is_current
+- is_closed
+
+---
+
+# 5. جدول المراحل
+
+stages
+
+مثال
+
+- KG
+- Primary
+- Preparatory
+
+الحقول
+
+- id
+- name
+- order
+- is_active
+
+---
+
+# 6. جدول الصفوف
+
+grades
+
+الحقول
+
+- id
+- stage_id
+- name
+- order
+- is_active
+
+العلاقة
+
+Grade
+
+↓
+
+Stage
+
+---
+
+# 7. جدول الفصول
+
+classes
+
+الحقول
+
+- id
+- grade_id
+- class_name
+- capacity
+- is_active
+
+---
+
+# 8. جدول المواد
+
+subjects
+
+الحقول
+
+- id
+- grade_id
+- subject_name
+- code
+- order
+- is_active
+
+---
+
+# 9. جدول الطلاب
+
+students
+
+الحقول الأساسية
+
+- id
+- student_code
+- national_id
+- passport_number
+- full_name
+- gender
+- birth_date
+- religion
+- nationality
+- admission_date
+- academic_year_id
+- stage_id
+- grade_id
+- class_id
+- second_language
+- bus_enabled
+- bus_route
+- status
+- profile_image
+- qr_code
+
+---
+
+# 10. جدول أولياء الأمور
+
+guardians
+
+الحقول
+
+- id
+- full_name
+- relation_type
+- national_id
+- phone
+- phone2
+- email
+- address
+- occupation
+- preferred_contact_method
+
+---
+
+# 11. جدول ربط الطلاب بأولياء الأمور
+
+student_guardians
+
+يسمح بأكثر من ولي أمر.
+
+الحقول
+
+- id
+- student_id
+- guardian_id
+- is_primary
+- can_receive_sms
+- can_receive_notifications
+
+---
+
+# 12. جدول الموظفين
+
+employees
+
+الحقول
+
+- id
+- employee_code
+- full_name
+- national_id
+- phone
+- email
+- address
+- department
+- job_title
+- hire_date
+- salary
+- bank_account
+- photo
+
+---
+
+# 13. جدول المستخدمين
+
+users
+
+الحقول
+
+- id
+- username
+- password_hash
+- employee_id
+- is_active
+- last_login
+- password_changed_at
+
+---
+
+# 14. جدول الأدوار
+
+roles
+
+مثل
+
+- مدير النظام
+- المديرة
+- الحسابات
+- شؤون الطلاب
+
+---
+
+# 15. جدول الصلاحيات
+
+permissions
+
+يحتوي على جميع Permission IDs الموجودة في وثائق SRS.
+
+---
+
+# 16. جدول ربط الأدوار بالصلاحيات
+
+role_permissions
+
+---
+
+# 17. جدول حضور الطلاب
+
+student_attendance
+
+---
+
+# 18. جدول حضور الموظفين
+
+employee_attendance
+
+---
+
+# 19. جدول التقييمات
+
+student_assessments
+
+---
+
+# 20. جدول الدرجات
+
+student_grades
+
+---
+
+# 21. جدول الرسوم الدراسية
+
+student_fees
+
+---
+
+# 22. جدول التحصيلات
+
+student_payments
+
+---
+
+# 23. جدول الخصومات
+
+student_discounts
+
+---
+
+# 24. جدول الإعفاءات
+
+student_exemptions
+
+---
+
+# 25. جدول الفواتير
+
+invoices
+
+---
+
+# 26. جدول بنود الفاتورة
+
+invoice_items
+
+---
+
+# 27. جدول القيود المحاسبية
+
+journal_entries
+
+---
+
+# 28. جدول بنود القيود
+
+journal_entry_lines
+
+---
+
+# 29. جدول الحسابات
+
+chart_of_accounts
+
+---
+
+# 30. جدول الخزائن
+
+treasuries
+
+---
+
+# 31. جدول الحسابات البنكية
+
+bank_accounts
+
+---
+
+# 32. جدول التحويلات المالية
+
+money_transfers
+
+---
+
+# 33. جدول المصروفات
+
+expenses
+
+---
+
+# 34. جدول الإيرادات الأخرى
+
+other_revenues
+
+---
+
+# 35. جدول المخازن
+
+warehouses
+
+---
+
+# 36. جدول الأصناف
+
+inventory_items
+
+---
+
+# 37. جدول حركات المخزون
+
+inventory_transactions
+
+---
+
+# 38. جدول الكتب
+
+books
+
+---
+
+# 39. جدول الزي المدرسي
+
+uniforms
+
+---
+
+# 40. جدول المبيعات
+
+sales
+
+---
+
+# 41. جدول تفاصيل البيع
+
+sale_items
+
+---
+
+# 42. جدول الباص
+
+bus_routes
+
+---
+
+# 43. جدول اشتراكات الباص
+
+student_bus_subscriptions
+
+---
+
+# 44. جدول التحويلات
+
+student_transfers
+
+---
+
+# 45. جدول طلبات التقديم
+
+admission_requests
+
+---
+
+# 46. جدول المستندات
+
+documents
+
+---
+
+# 47. جدول الإعلانات
+
+announcements
+
+---
+
+# 48. جدول الإشعارات
+
+notifications
+
+---
+
+# 49. جدول الرسائل
+
+messages
+
+---
+
+# 50. جدول النسخ الاحتياطية
+
+backups
+
+---
+
+# 51. جدول سجل العمليات
+
+audit_logs
+
+يخزن
+
+- المستخدم
+- العملية
+- الوحدة
+- البيانات القديمة
+- البيانات الجديدة
+- التاريخ
+- عنوان الجهاز
+- IP (إن وجد)
+- Device ID
+
+---
+
+# 52. جدول سجل المزامنة
+
+sync_logs
+
+---
+
+# 53. جدول إعدادات النظام
+
+system_settings
+
+---
+
+# 54. جدول التراخيص
+
+licenses
+
+---
+
+# 55. جدول تحديثات النظام
+
+system_updates
+
+---
+
+# 56. قواعد العلاقات
+
+جميع العلاقات تعتمد على:
+
+- Foreign Keys
+- Cascade Restrict
+- Soft Delete
+- UUID Primary Keys
+
+ولا يسمح بالحذف المباشر لأي سجل مرتبط بسجلات أخرى.
+
+---
+
+# 57. قواعد التسمية
+
+- جميع أسماء الجداول بصيغة الجمع.
+- جميع أسماء الأعمدة باللغة الإنجليزية.
+- استخدام snake_case.
+- عدم استخدام أسماء مختصرة غير واضحة.
+- جميع المفاتيح الخارجية تنتهي بـ `_id`.
+
+---
+
+# 58. معايير التوسع
+
+يجب أن تسمح قاعدة البيانات بإضافة:
+
+- مدارس جديدة.
+- فروع جديدة.
+- عملات جديدة.
+- لغات جديدة.
+- وحدات جديدة.
+
+دون الحاجة إلى تعديل هيكل الجداول الأساسية.
+
+---
+
+## نهاية DD-001
