@@ -1,0 +1,631 @@
+# ERD-001
+
+# Entity Relationship Specification
+# مواصفات العلاقات بين الكيانات (ERD)
+
+**Project:** JOE INDUSTRIES School ERP
+
+**Version:** 1.0
+
+---
+
+# 1. الهدف
+
+تحدد هذه الوثيقة العلاقات المنطقية بين جميع الكيانات (Entities) داخل قاعدة بيانات النظام.
+
+تعتبر هذه الوثيقة المرجع الأساسي لتصميم قاعدة البيانات، وإنشاء العلاقات (Foreign Keys)، وضمان سلامة البيانات (Referential Integrity).
+
+---
+
+# 2. المبادئ العامة
+
+تعتمد قاعدة البيانات على:
+
+- UUID Primary Keys.
+- Foreign Keys.
+- Soft Delete.
+- Transactions.
+- Normalization.
+- منع تكرار البيانات.
+- Referential Integrity.
+
+---
+
+# 3. الهيكل العام
+
+```
+School
+
+↓
+
+Academic Year
+
+↓
+
+Stage
+
+↓
+
+Grade
+
+↓
+
+Class
+
+↓
+
+Student
+
+↓
+
+Attendance
+Grades
+Finance
+Documents
+Transfers
+Bus
+Notifications
+Timeline
+```
+
+---
+
+# 4. الهيكل الأكاديمي
+
+```
+School
+
+1
+
+↓
+
+∞
+
+Academic Years
+
+↓
+
+∞
+
+Stages
+
+↓
+
+∞
+
+Grades
+
+↓
+
+∞
+
+Classes
+
+↓
+
+∞
+
+Students
+```
+
+العلاقة:
+
+School
+
+1 → ∞ Academic Years
+
+Academic Year
+
+1 → ∞ Stages
+
+Stage
+
+1 → ∞ Grades
+
+Grade
+
+1 → ∞ Classes
+
+Class
+
+1 → ∞ Students
+
+---
+
+# 5. الطلاب وأولياء الأمور
+
+```
+Students
+
+∞
+
+↓
+
+Student_Guardians
+
+↑
+
+∞
+
+Guardians
+```
+
+العلاقة:
+
+Many To Many
+
+يمكن أن:
+
+- يكون للطالب أكثر من ولي أمر.
+- يكون لولي الأمر أكثر من طالب.
+
+---
+
+# 6. الطلاب والحضور
+
+```
+Student
+
+1
+
+↓
+
+∞
+
+Attendance
+```
+
+كل طالب يمتلك عددًا غير محدود من سجلات الحضور.
+
+---
+
+# 7. الطلاب والدرجات
+
+```
+Student
+
+↓
+
+Grades
+
+↓
+
+Subject
+
+↓
+
+Assessment
+```
+
+كل درجة ترتبط بـ:
+
+- طالب.
+- مادة.
+- تقييم.
+- سنة دراسية.
+
+---
+
+# 8. الطلاب والمصروفات
+
+```
+Student
+
+↓
+
+Student Fees
+
+↓
+
+Payments
+
+↓
+
+Invoices
+
+↓
+
+Journal Entries
+```
+
+العلاقة:
+
+كل عملية مالية مرتبطة بالطالب تنتج قيودًا محاسبية (عند التفعيل).
+
+---
+
+# 9. الطلاب والتحويلات
+
+```
+Student
+
+↓
+
+Transfers
+```
+
+يمكن أن يمتلك الطالب عدة تحويلات عبر السنوات الدراسية.
+
+---
+
+# 10. الطلاب والمستندات
+
+```
+Student
+
+↓
+
+Documents
+```
+
+كل مستند يرتبط بطالب واحد.
+
+---
+
+# 11. الطلاب والباص
+
+```
+Student
+
+↓
+
+Bus Subscription
+
+↓
+
+Bus Route
+```
+
+كل طالب يمتلك اشتراكًا واحدًا فعالًا في الوقت نفسه (إذا كان مشتركًا).
+
+---
+
+# 12. الموظفون والمستخدمون
+
+```
+Employee
+
+1
+
+↓
+
+1
+
+User
+```
+
+كل موظف يمكن أن يمتلك حسابًا واحدًا داخل النظام.
+
+---
+
+# 13. المستخدمون والأدوار
+
+```
+Users
+
+↓
+
+User Roles
+
+↓
+
+Roles
+```
+
+ويمكن للمستخدم امتلاك أكثر من دور إذا تم تفعيل ذلك من الإعدادات.
+
+---
+
+# 14. الأدوار والصلاحيات
+
+```
+Roles
+
+↓
+
+Role Permissions
+
+↓
+
+Permissions
+```
+
+العلاقة:
+
+Many To Many
+
+---
+
+# 15. المخازن
+
+```
+Warehouse
+
+↓
+
+Inventory Items
+
+↓
+
+Inventory Transactions
+```
+
+كل حركة مخزنية ترتبط بصنف واحد ومستودع واحد.
+
+---
+
+# 16. الكتب والزي
+
+```
+Books
+
+↓
+
+Inventory
+
+↓
+
+Sales
+```
+
+```
+Uniforms
+
+↓
+
+Inventory
+
+↓
+
+Sales
+```
+
+يتم خصم الكميات تلقائيًا من المخزون بعد كل عملية بيع.
+
+---
+
+# 17. نقطة البيع
+
+```
+Sale
+
+↓
+
+Sale Items
+
+↓
+
+Inventory Item
+```
+
+كل عملية بيع تحتوي على أكثر من صنف.
+
+---
+
+# 18. المحاسبة
+
+```
+Invoice
+
+↓
+
+Journal Entry
+
+↓
+
+Journal Entry Lines
+
+↓
+
+Chart Of Accounts
+```
+
+كل قيد محاسبي يحتوي على بندين أو أكثر وفقًا لمبدأ القيد المزدوج.
+
+---
+
+# 19. النسخ الاحتياطي
+
+```
+System
+
+↓
+
+Backup
+
+↓
+
+Restore Logs
+```
+
+كل عملية استعادة ترتبط بنسخة احتياطية واحدة.
+
+---
+
+# 20. الإشعارات
+
+```
+Notification
+
+↓
+
+Student
+
+↓
+
+Guardian
+
+↓
+
+Application
+```
+
+يمكن إرسال نفس الإشعار إلى:
+
+- التطبيق.
+- الموقع.
+- SMS.
+- البريد الإلكتروني (مستقبلاً).
+
+---
+
+# 21. سجل العمليات
+
+```
+User
+
+↓
+
+Audit Log
+
+↓
+
+Affected Record
+```
+
+كل عملية داخل النظام يجب أن ترتبط بالمستخدم الذي قام بها.
+
+---
+
+# 22. المزامنة
+
+```
+Desktop ERP
+
+↓
+
+Sync Queue
+
+↓
+
+Cloud
+
+↓
+
+Website
+
+↓
+
+Mobile Apps
+```
+
+جميع عمليات المزامنة تسجل في جدول Sync Logs.
+
+---
+
+# 23. المستندات
+
+```
+Documents
+
+↓
+
+Students
+
+Employees
+
+Finance
+
+Inventory
+
+Admissions
+
+Transfers
+```
+
+يمكن ربط أي مستند بأي وحدة داخل النظام.
+
+---
+
+# 24. Timeline
+
+كل كيان رئيسي يمتلك Timeline خاصًا به.
+
+مثل:
+
+```
+Student Timeline
+
+↓
+
+Attendance
+
+↓
+
+Payments
+
+↓
+
+Transfers
+
+↓
+
+Documents
+
+↓
+
+Grades
+
+↓
+
+Notifications
+```
+
+---
+
+# 25. إدارة الإعدادات
+
+```
+System Settings
+
+↓
+
+Finance
+
+Academic
+
+Inventory
+
+SMS
+
+Users
+
+Appearance
+
+Backup
+
+Synchronization
+```
+
+جميع الوحدات تعتمد على إعدادات النظام المركزية.
+
+---
+
+# 26. قواعد العلاقات
+
+- يمنع حذف أي سجل مرتبط بسجل آخر.
+- جميع العلاقات تعتمد على UUID.
+- جميع العمليات المهمة تستخدم Transactions.
+- جميع الكيانات الرئيسية تدعم Soft Delete.
+- جميع العلاقات تسجل في Audit Log.
+- لا يسمح بوجود بيانات يتيمة (Orphan Records).
+
+---
+
+# 27. قابلية التوسع
+
+يجب أن يسمح تصميم العلاقات مستقبلًا بـ:
+
+- Multi School.
+- Multi Branch.
+- Multi Currency.
+- Multi Language.
+- Multi Academic Systems.
+- Online Payments.
+- AI Modules.
+
+دون إعادة تصميم قاعدة البيانات.
+
+---
+
+## نهاية ERD-001
