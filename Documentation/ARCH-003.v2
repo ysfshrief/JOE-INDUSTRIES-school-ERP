@@ -1,0 +1,296 @@
+# ARCH-003
+
+# JOE INDUSTRIES Cloud & License Architecture
+
+Version: 2.0
+
+Status: OFFICIAL
+
+This document supersedes all previous versions of ARCH-003.
+
+---
+
+# 1. Purpose
+
+The JOE INDUSTRIES Cloud platform is NOT an ERP system.
+
+It is an internal management platform used only by JOE INDUSTRIES.
+
+Its primary purpose in Version 1 is License Management.
+
+The Cloud platform SHALL NOT contain student data, grades, financial records or school operational data.
+
+---
+
+# 2. Cloud Responsibilities (Version 1)
+
+The Cloud platform is responsible ONLY for:
+
+- Schools Management
+- License Management
+- Device Registration
+- License Validation
+- Company User Accounts
+- Basic Dashboard
+
+The following features are postponed to future versions:
+
+- Automatic Updates
+- Cloud Backup
+- Remote Support
+- Analytics
+- Marketplace
+
+---
+
+# 3. Technology Stack
+
+Version 1 shall use:
+
+Frontend
+
+- Next.js
+
+Authentication
+
+- Firebase Authentication
+
+Database
+
+- Cloud Firestore
+
+Hosting
+
+- Vercel
+
+License API
+
+- Firebase Cloud Functions
+
+No dedicated VPS is required.
+
+No paid cloud infrastructure is required.
+
+The system must remain compatible with future migration to another cloud provider.
+
+---
+
+# 4. Communication
+
+The ERP Server SHALL NEVER connect directly to Firestore.
+
+Communication must always follow this architecture:
+
+ERP Server
+
+↓
+
+HTTPS
+
+↓
+
+Firebase Cloud Function
+
+↓
+
+Firestore
+
+Direct database access from ERP Server is prohibited.
+
+---
+
+# 5. Authentication
+
+Only JOE INDUSTRIES employees can sign in.
+
+Supported roles:
+
+- Administrator
+- Support
+- Sales
+
+Schools cannot log into the Cloud Platform.
+
+---
+
+# 6. School Information
+
+Only business information is stored.
+
+Example:
+
+- School ID
+- School Name
+- City
+- Package
+- License ID
+- Status
+- Expiry Date
+- Maximum Devices
+
+No academic information is stored.
+
+---
+
+# 7. License
+
+Each school owns one License.
+
+Each License contains:
+
+- License ID
+- License Key
+- School ID
+- Package
+- Status
+- Expiry Date
+- Activation Date
+- Maximum Devices
+
+---
+
+# 8. Device Registration
+
+Each ERP Server owns one unique Device ID.
+
+During activation:
+
+License Key
+
+↓
+
+Cloud Function
+
+↓
+
+Validation
+
+↓
+
+Device Registration
+
+↓
+
+Activation Success
+
+A License may only be activated on authorized devices.
+
+---
+
+# 9. Monthly Validation
+
+Every 30 days the ERP Server SHALL attempt to validate the License.
+
+Validation request contains only:
+
+- License Key
+- Device ID
+- ERP Version
+
+No school data is transmitted.
+
+If validation succeeds:
+
+The next validation date is updated.
+
+If Internet is unavailable:
+
+The ERP Server continues operating normally.
+
+---
+
+# 10. Grace Period
+
+If validation cannot be completed after the scheduled period:
+
+The system enters Grace Mode.
+
+During Grace Mode:
+
+- Full operation continues.
+- Warning messages are displayed.
+
+After Grace Mode expires:
+
+Blocked:
+
+- Creating new records
+- Synchronization
+- Future cloud services
+
+Still allowed:
+
+- Login
+- Search
+- Reports
+- Printing
+- Viewing existing data
+
+---
+
+# 11. Updates
+
+Version 1 does NOT include automatic updates.
+
+System updates are installed manually by JOE INDUSTRIES.
+
+---
+
+# 12. Backup
+
+Cloud Backup is NOT implemented in Version 1.
+
+Schools use:
+
+- Local Backup
+- External Drive Backup
+
+Cloud Backup will be added in a future release.
+
+---
+
+# 13. Dashboard
+
+The Cloud Dashboard displays:
+
+- Total Schools
+- Active Licenses
+- Expired Licenses
+- Registered Devices
+- Packages
+- Company Users
+
+No school operational data is displayed.
+
+---
+
+# 14. Security Rules
+
+ERP Server never accesses Firestore directly.
+
+All validation passes through Cloud Functions.
+
+All requests use HTTPS.
+
+All operations are logged.
+
+Student information is never uploaded.
+
+---
+
+# 15. Future Expansion
+
+Future versions may include:
+
+- Automatic Updates
+- Cloud Backup
+- Remote Support
+- Analytics
+- Notifications
+- Multi-Branch Management
+
+These features are intentionally excluded from Version 1.
+
+---
+
+# End of ARCH-003 Version 2.0
